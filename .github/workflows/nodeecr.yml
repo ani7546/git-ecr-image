@@ -1,0 +1,31 @@
+name: Push Node.js Docker Image to AWS ECR
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to the main branch
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Login to AWS ECR
+    - name: Login to AWS ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # Step 3: Build the Node.js Docker image
+    - name: Build Node.js Docker Image
+      run: |
+        docker build -t my-node-app:latest .
+        docker tag my-node-app:latest ${{ secrets.ECR_REPOSITORY_URI }}:latest
+
+    # Step 4: Push the Docker image to AWS ECR
+    - name: Push Docker Image to ECR
+      run: |
+        docker push ${{ secrets.ECR_REPOSITORY_URI }}:latest
