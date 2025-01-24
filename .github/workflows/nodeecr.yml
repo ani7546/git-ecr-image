@@ -3,7 +3,7 @@ name: Push Node.js Docker Image to AWS ECR
 on:
   push:
     branches:
-      - main # Trigger on push to the main branch
+      - main
 
 jobs:
   build-and-push:
@@ -18,7 +18,8 @@ jobs:
     - name: Login to AWS ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-
+      with:
+        region: ap-south-1 
     # Step 3: Build the Node.js Docker image
     - name: Build Node.js Docker Image
       run: |
