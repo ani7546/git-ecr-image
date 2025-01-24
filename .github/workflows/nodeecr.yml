@@ -14,12 +14,17 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Step 2: Login to AWS ECR
-    - name: Login to AWS ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-      with:
-        region: ap-south-1 
+   # Step 2: Login to AWS ECR
+    # - name: Login to AWS ECR
+    #   id: login-ecr
+    #   uses: aws-actions/amazon-ecr-login@v1
+    #   with:
+    #     region: ap-south-1 
+    - name: Manual AWS CLI Login
+      run: |
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+        docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY_URI }}
+
     # Step 3: Build the Node.js Docker image
     - name: Build Node.js Docker Image
       run: |
